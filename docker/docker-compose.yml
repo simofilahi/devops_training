@@ -1,0 +1,34 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile-backend
+    ports:
+      - "3001:3001" # Correct the comment to reflect the correct exposed port
+    depends_on:
+      - mongo
+    networks:
+      - backend-network
+
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootuser
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+    networks:
+      - backend-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-frontend
+    ports:
+      - "5000:5000" # Expose the frontend service on port 5000
+    depends_on:
+      - backend
+    networks:
+      - backend-network # Added the frontend to the same network for direct backend communication
+
+networks:
+  backend-network:
+    driver: bridge
