@@ -1,0 +1,61 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test_and_build_backend:
+    name: Test and Build Backend
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Backend Docker Image
+      run: docker build -f Dockerfile-backend -t backend .
+
+    - name: Test Backend
+      run: |
+        docker run -d --name backend_test backend
+        docker exec backend_test npm test
+        docker stop backend_test
+        docker rm backend_test
+
+    - name: Build Backend Project
+      run: |
+        docker run --name backend_build backend npm run build
+        docker rm backend_build
+
+  test_and_build_frontend:
+    name: Test and Build Frontend
+    needs: test_and_build_backend
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Frontend Docker Image
+      run: docker build -f Dockerfile-frontend -t frontend .
+
+    - name: Test Frontend
+      run: |
+        docker run -d --name frontend_test frontend
+        docker exec frontend_test npm test
+        docker stop frontend_test
+        docker rm frontend_test
+
+    - name: Build Frontend Project
+      run: |
+        docker run --name frontend_build frontend npm run build
+        docker rm frontend_build
