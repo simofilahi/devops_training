@@ -1,5 +1,5 @@
 # Use the official Node.js 14 as a parent image
-FROM node:14
+FROM node:16
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -17,4 +17,4 @@ RUN npm install
 EXPOSE 3001
 
 # Run the app
-CMD ["node", "server.js"]
+CMD ["node", "app.js"]
