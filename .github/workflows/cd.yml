@@ -22,7 +22,9 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          cd /root/devops/devops_training
-          git pull origin master
-          docker-compose down
-          docker-compose up --build -d
+          rm -rf /root/devops/devops_training  # Remove the directory and its contents
+          cd /root/devops
+          git clone git@github.com:${{ github.repository }}.git # Clone the repo to the same directory
+          cd devops_training
+          docker compose down
+          docker compose up --build -d
