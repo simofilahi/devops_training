@@ -1,4 +1,4 @@
-name: CI Workflow
+name: CI
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   test_and_build_backend:
-    name: Test and Build Backend
+    name: Test Backend
     runs-on: ubuntu-latest
 
     steps:
