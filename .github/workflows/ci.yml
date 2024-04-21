@@ -29,11 +29,6 @@ jobs:
         docker stop backend_test
         docker rm backend_test
 
-    - name: Build Backend Project
-      run: |
-        docker run --name backend_build backend npm run build
-        docker rm backend_build
-
   test_and_build_frontend:
     name: Test and Build Frontend
     needs: test_and_build_backend
